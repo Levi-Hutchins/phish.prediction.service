@@ -1,0 +1,51 @@
+name: PhishPrediction CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore phish.prediction/phish.prediction.sln
+
+      # Build the solution
+      - name: Build the solution
+        run: dotnet build phish.prediction/phish.prediction.sln --configuration Release --no-restore
+
+      # Run unit tests
+      - name: Run tests
+        run: dotnet test phish.prediction/phish.prediction.sln --configuration Release --no-build --verbosity normal
+
+      # Publish the deployment-ready build
+      - name: Publish build artifact
+        run: dotnet publish phish.prediction/phish.prediction.api/phish.prediction.api.csproj --configuration Release --output ./published --runtime linux-x64
+        env:
+          DOTNET_ROOT: /usr/share/dotnet
+
+      # Upload build artifacts
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-package
+          path: ./published
