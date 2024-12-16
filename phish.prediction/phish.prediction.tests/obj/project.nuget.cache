@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mh/Do2yC/2mft/DKi1U51M+woZBeNQao3RVdGw8iy4GmKlLEgUHnRbXHwB9IUALxEj+P9LIpXylbmfjWzZ3lsw==",
+  "dgSpecHash": "fFNDELlEX2s=",
   "success": true,
-  "projectFilePath": "/Users/levi_1/Desktop/DEV/PhishFinder/phish.prediction-service/phish.prediction/phish.prediction.tests/phish.prediction.tests.csproj",
+  "projectFilePath": "/Users/levi_1/phish.prediction.service/phish.prediction/phish.prediction.tests/phish.prediction.tests.csproj",
   "expectedPackageFiles": [
     "/Users/levi_1/.nuget/packages/coverlet.collector/6.0.0/coverlet.collector.6.0.0.nupkg.sha512",
     "/Users/levi_1/.nuget/packages/mediatr/12.4.1/mediatr.12.4.1.nupkg.sha512",
