@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HlPOuruvfyk=",
+  "dgSpecHash": "+LkVwjcL4kq/Z49OaSH/STIwIo08zoqppGTsOUQsBM6w3PZxx6BZFrh4L90Rp1WVScxUbrM0I4qKAs0ih5FkAg==",
   "success": true,
-  "projectFilePath": "/Users/levi_1/phish.prediction.service/phish.prediction/phish.prediction.lib/phish.prediction.lib.csproj",
+  "projectFilePath": "/Users/levi_1/Desktop/DEV/PhishFinder/phish.prediction.service/phish.prediction/phish.prediction.lib/phish.prediction.lib.csproj",
   "expectedPackageFiles": [
     "/Users/levi_1/.nuget/packages/humanizer/2.14.1/humanizer.2.14.1.nupkg.sha512",
     "/Users/levi_1/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
