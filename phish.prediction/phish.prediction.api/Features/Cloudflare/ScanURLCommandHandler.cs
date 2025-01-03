@@ -1,25 +1,25 @@
 using MediatR;
-using phish.prediction.lib.Configuration;
 using System.Text.Json;
 using System.Text;
+using Microsoft.Extensions.Options;
+using phish.prediction.lib.Features.Cloudflare.Config;
 
 namespace phish.prediction.api.Features.Cloudflare;
 
 public class ScanUrlCommandHandler : IRequestHandler<ScanUrlCommand, string>
 {
-    private readonly CloudflareConfigService _configService;
+    private readonly CloudflareConfig _config;
     private readonly HttpClient _httpClient;
 
-    public ScanUrlCommandHandler(CloudflareConfigService configService, HttpClient httpClient)
+    public ScanUrlCommandHandler(IOptions<CloudflareConfig> config, HttpClient httpClient)
     {
-        _configService = configService;
+        _config = config.Value;
         _httpClient = httpClient;
     }
 
     public async Task<string> Handle(ScanUrlCommand request, CancellationToken cancellationToken)
     {
         Console.WriteLine(request.Url);
-        var config = _configService.GetConfig();
         Console.WriteLine("client1");
 
         var payload = JsonSerializer.Serialize(new { url = request.Url });
@@ -27,10 +27,10 @@ public class ScanUrlCommandHandler : IRequestHandler<ScanUrlCommand, string>
         Console.WriteLine("client2");
 
         _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {config.ApiKey}");
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_config.ApiKey}");
         Console.WriteLine("client");
 
-        var response = await _httpClient.PostAsync(config.ScanEndpoint, httpContent, cancellationToken);
+        var response = await _httpClient.PostAsync(_config.ScanEndpoint, httpContent, cancellationToken);
         Console.WriteLine(response);
         if (!response.IsSuccessStatusCode)
         {

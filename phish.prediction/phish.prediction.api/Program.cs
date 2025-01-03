@@ -1,12 +1,10 @@
 using phish.prediction.api.Features.Cloudflare;
-using phish.prediction.lib.Configuration;
 using phish.prediction.lib.Features.Cloudflare.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add configuration services
 builder.Services.Configure<CloudflareConfig>(builder.Configuration.GetSection("Cloudflare"));
-builder.Services.AddSingleton<CloudflareConfigService>();
 
 // Add HttpClient
 builder.Services.AddHttpClient();

@@ -15,8 +15,4 @@
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\phish.prediction.lib\phish.prediction.lib.csproj" />
-    </ItemGroup>
-
 </Project>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("phish.prediction.lib")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+962a1ad9cb0c5fbcaf25014487dd63458b7f3882")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad70f7395845b6a6f30a5273459e9e8a859ea45a")]
 [assembly: System.Reflection.AssemblyProductAttribute("phish.prediction.lib")]
 [assembly: System.Reflection.AssemblyTitleAttribute("phish.prediction.lib")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

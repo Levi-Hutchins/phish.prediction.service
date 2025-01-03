@@ -19,7 +19,7 @@ public class CloudflareController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("scan")]
+    [HttpPost("scan-url")]
     public async Task<IActionResult> ScanUrl([FromBody] ScanUrlRequest request)
     {
         var result = await _mediator.Send(new ScanUrlCommand(request.Url));
