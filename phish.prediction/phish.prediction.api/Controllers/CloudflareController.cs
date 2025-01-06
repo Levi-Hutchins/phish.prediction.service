@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using phish.prediction.api.Features.Cloudflare;
 using phish.prediction.api.Features.Cloudflare.Models;
@@ -20,11 +21,22 @@ public class CloudflareController : ControllerBase
     }
 
     [HttpPost("scan-url")]
+    [ProducesResponseType(typeof(ScanResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ScanUrl([FromBody] ScanUrlRequest request)
     {
-        var result = await _mediator.Send(new ScanUrlCommand(request.Url));
-        _logger.LogInformation(result);
-        return Ok(result);
+        try
+        {
+            var result = await _mediator.Send(new ScanUrlCommand(request.Url));
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"An error occured - {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred.");
+        }
+        
     }
+    
 }
 
