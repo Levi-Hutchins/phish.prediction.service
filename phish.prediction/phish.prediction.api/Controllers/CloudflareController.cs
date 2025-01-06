@@ -23,6 +23,7 @@ public class CloudflareController : ControllerBase
     [HttpPost("scan-url")]
     [ProducesResponseType(typeof(ScanResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ScanUrl([FromBody] ScanUrlRequest request)
     {
         try
