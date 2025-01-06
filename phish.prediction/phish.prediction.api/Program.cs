@@ -1,28 +1,35 @@
 using phish.prediction.api.Features.Cloudflare;
-using phish.prediction.lib.Configuration;
 using phish.prediction.lib.Features.Cloudflare.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add configuration services
-builder.Services.Configure<CloudflareConfig>(builder.Configuration.GetSection("Cloudflare"));
-builder.Services.AddSingleton<CloudflareConfigService>();
+builder.Services.Configure<CloudflareConfiguration>(builder.Configuration.GetSection("Cloudflare"));
+builder.Services.Configure<Authentication>(builder.Configuration.GetSection("Authentication"));
 
-// Add HttpClient
 builder.Services.AddHttpClient();
 
-// Add MediatR for Vertical Slice Architecture
 builder.Services.AddMediatR(_ => 
     _.RegisterServicesFromAssembly(typeof(ScanUrlCommandHandler).Assembly));
 
-// Add controllers
+// chnage this (only for dev)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAllOrigins",
+        configurePolicy: policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers();
 
-// Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors("AllowAllOrigins");
 
 // Enable Swagger and Swagger UI
 if (app.Environment.IsDevelopment())
@@ -35,7 +42,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Map controllers
+app.UseMiddleware<AuthenticationMiddleware>();
 app.MapControllers();
 
 app.Run();

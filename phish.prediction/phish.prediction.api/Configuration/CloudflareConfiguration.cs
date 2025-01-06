@@ -1,6 +1,6 @@
 namespace phish.prediction.lib.Features.Cloudflare.Config;
 
-public class CloudflareConfig
+public class CloudflareConfiguration
 {
     public required string ScanEndpoint { get; set; }
     public required string ApiKey { get; set; }
