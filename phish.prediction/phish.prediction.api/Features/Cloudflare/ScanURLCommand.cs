@@ -2,7 +2,7 @@ using MediatR;
 
 namespace phish.prediction.api.Features.Cloudflare;
 
-public class ScanUrlCommand : IRequest<string>
+public class ScanUrlCommand : IRequest<ScanSubmission>
 {
     public string Url { get; set; }
 
