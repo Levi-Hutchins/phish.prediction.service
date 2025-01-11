@@ -1,6 +1,4 @@
 using MediatR;
-using phish.prediction.api.Features.Cloudflare.Models;
-using phish.prediction.api.Models;
 
 namespace phish.prediction.api.Features.Cloudflare;
 

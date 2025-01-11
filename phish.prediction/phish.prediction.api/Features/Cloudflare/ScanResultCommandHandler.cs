@@ -13,22 +13,25 @@ public class ScanResultCommandHandler: IRequestHandler<ScanResultCommand, ScanRe
     private readonly CloudflareConfiguration _configuration;
     private readonly HttpClient _httpClient;
     private readonly ILogger<ScanUrlCommandHandler> _logger;
+    private readonly ScanResultService _scanResultService;
     
     public ScanResultCommandHandler(
         IOptions<CloudflareConfiguration> config, 
         HttpClient httpClient, 
-        ILogger<ScanUrlCommandHandler> logger)
+        ILogger<ScanUrlCommandHandler> logger,
+        ScanResultService service)
     {
         _configuration = config.Value;
         _httpClient = httpClient;
         _logger = logger;
+        _scanResultService = service;
     }
 
     public async Task<ScanResult> Handle(ScanResultCommand request, CancellationToken cancellationToken)
     {
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configuration.ApiKey}");
-
+        
         try
         {
             var response = await _httpClient.GetAsync(_configuration.ScanResultEndpoint + request.UUID, cancellationToken);
@@ -53,6 +56,7 @@ public class ScanResultCommandHandler: IRequestHandler<ScanResultCommand, ScanRe
                 _logger.LogWarning("Error response received: {StatusCode} - {JsonResponse}", response.StatusCode, jsonResponse);
             }
 
+            await _scanResultService.CreateAsync(scanResult);
             return scanResult;
         }
         catch (Exception ex)

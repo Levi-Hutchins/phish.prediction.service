@@ -10,7 +10,9 @@ builder.Services.Configure<CloudflareConfiguration>
 builder.Services.Configure<Authentication>
     (builder.Configuration.GetSection("Authentication"));
 
-builder.Services.AddSingleton<CloudflareService>();
+builder.Services.AddSingleton<ScanResultService>();
+builder.Services.AddSingleton<ScanSubmissionService>();
+
 builder.Services.AddHttpClient();
 
 builder.Services.AddMediatR(_ => 

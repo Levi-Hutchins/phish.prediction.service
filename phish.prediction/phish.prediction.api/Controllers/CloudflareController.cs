@@ -40,8 +40,14 @@ public class CloudflareController : ControllerBase
     }
 
     [HttpGet("scan-results/{uuid}")]
+    [ProducesResponseType(typeof(ScanResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetScanResult(string uuid)
     {
+        if (!Guid.TryParse(uuid, out _))
+            return BadRequest("Invalid ID");
         try
         {
             var scanResult = await _mediator.Send(new ScanResultCommand(uuid));

@@ -279,6 +279,8 @@ public class IpStats
 
 public class Task
 {
+    public string uuid { get; set; }
+    public string time { get; set; }
     public string apexDomain { get; set; }
     public string domain { get; set; }
 }
