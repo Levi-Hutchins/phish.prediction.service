@@ -1,56 +1,47 @@
-using MediatR;
 using System.Text.Json;
-using System.Text;
+using MediatR;
 using Microsoft.Extensions.Options;
-
+using Newtonsoft.Json;
+using phish.prediction.api.Features.Cloudflare.Models;
 using phish.prediction.lib.Features.Cloudflare.Config;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace phish.prediction.api.Features.Cloudflare;
 
-public class ScanUrlCommandHandler : IRequestHandler<ScanUrlCommand, ScanSubmission>
+public class ScanResultCommandHandler: IRequestHandler<ScanResultCommand, ScanResult>
 {
     private readonly CloudflareConfiguration _configuration;
     private readonly HttpClient _httpClient;
     private readonly ILogger<ScanUrlCommandHandler> _logger;
-    private readonly CloudflareService _service;
-
-    public ScanUrlCommandHandler(
+    
+    public ScanResultCommandHandler(
         IOptions<CloudflareConfiguration> config, 
         HttpClient httpClient, 
-        ILogger<ScanUrlCommandHandler> logger,
-        CloudflareService service
-        )
+        ILogger<ScanUrlCommandHandler> logger)
     {
         _configuration = config.Value;
         _httpClient = httpClient;
         _logger = logger;
-        _service = service;
     }
 
-    public async Task<ScanSubmission> Handle(ScanUrlCommand request, CancellationToken cancellationToken)
+    public async Task<ScanResult> Handle(ScanResultCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Scanning URL: {Url}", request.Url);
-
-        var payload = JsonSerializer.Serialize(new { url = request.Url });
-        var httpContent = new StringContent(payload, Encoding.UTF8, "application/json");
-
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configuration.ApiKey}");
 
         try
         {
-            var response = await _httpClient.PostAsync(_configuration.ScanEndpoint, httpContent, cancellationToken);
+            var response = await _httpClient.GetAsync(_configuration.ScanResultEndpoint + request.UUID, cancellationToken);
             var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-            
-            var scanResult = JsonSerializer.Deserialize<ScanSubmission>(jsonResponse, new JsonSerializerOptions
+
+            var scanResult = JsonSerializer.Deserialize<ScanResult>(jsonResponse, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
-
             if (scanResult == null)
             {
                 _logger.LogError("Failed to parse response from Cloudflare.");
-                return new ScanSubmission
+                return new ScanResult()
                 {
                     message = "Failed to parse response from Cloudflare." 
                     
@@ -62,18 +53,19 @@ public class ScanUrlCommandHandler : IRequestHandler<ScanUrlCommand, ScanSubmiss
                 _logger.LogWarning("Error response received: {StatusCode} - {JsonResponse}", response.StatusCode, jsonResponse);
             }
 
-            await _service.CreateAsync(scanResult);
-            
             return scanResult;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while scanning the URL: {URL}", request.Url);
-            return new ScanSubmission
+            _logger.LogError(ex, "An error occurred while fetching results: {UUID}", request.UUID);
+            return new ScanResult()
             {
                 message = "An error occurred while processing the request." 
                 
             };
         }
+        
     }
+    
+    
 }

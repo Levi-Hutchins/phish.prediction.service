@@ -3,9 +3,14 @@ using phish.prediction.lib.Features.Cloudflare.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<CloudflareConfiguration>(builder.Configuration.GetSection("Cloudflare"));
-builder.Services.Configure<Authentication>(builder.Configuration.GetSection("Authentication"));
+builder.Services.Configure<CloudflareMongoDB>
+    (builder.Configuration.GetSection("Cloudflare-Mongo"));
+builder.Services.Configure<CloudflareConfiguration>
+    (builder.Configuration.GetSection("Cloudflare"));
+builder.Services.Configure<Authentication>
+    (builder.Configuration.GetSection("Authentication"));
 
+builder.Services.AddSingleton<CloudflareService>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddMediatR(_ => 

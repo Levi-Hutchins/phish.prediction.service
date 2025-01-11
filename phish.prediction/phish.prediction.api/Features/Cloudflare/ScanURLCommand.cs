@@ -4,7 +4,7 @@ using phish.prediction.api.Models;
 
 namespace phish.prediction.api.Features.Cloudflare;
 
-public class ScanUrlCommand : IRequest<ScanResult>
+public class ScanUrlCommand : IRequest<ScanSubmission>
 {
     public string Url { get; set; }
 
